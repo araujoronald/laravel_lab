@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::group(['prefix' => 'api'], function() {
+    Route::resource('autenticacao', 'AutenticacaoController', ['only' => ['index']]);
+    Route::post('autenticacao', 'AutenticacaoController@autenticar');
+    Route::post('autenticacao/registrar', 'AutenticacaoController@registrar');
+});
+
 
 Route::resource('/atleta', 'AtletaController', ['except' => ['create', 'edit']]);
 

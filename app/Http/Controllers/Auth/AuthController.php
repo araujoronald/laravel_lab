@@ -44,7 +44,7 @@ class AuthController extends Controller
         return Validator::make($data, [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'password' => 'required|confirmed|min:6',
+            'password' => 'required|confirmed|min:4',
         ]);
     }
 
@@ -61,5 +61,17 @@ class AuthController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+    
+    public function authenticate()
+    {
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            return redirect()->intended('/');
+        }
+    }
+    
+    public function getRegister()
+    {
+        return "opa";
     }
 }
