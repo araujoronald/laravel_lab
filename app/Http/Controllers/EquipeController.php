@@ -7,81 +7,51 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Equipe;
 
-class EquipeController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
+class EquipeController extends Controller {
+    
+    // Listagem das equipes
+    public function index() {
+        return Equipe::all();
+    }
+   
+    // Chamada para montar página de criação uma nova equipe
+    public function create(){
         //
     }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+    
+    // Persistir nova equipe
+    public function store(Request $request) {
+        $equipe = new Equipe;
+        $this->persist($equipe, $request);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    // Exibir equipe
+    public function show($id){
+        return Equipe::find($id);
+    }
+    
+    // Chamada para montar página de edição uma nova equipe
+    public function edit($id){
+        return Equipe::find($id);
+    }
+    
+    // Atualizar uma equipe
+    public function update(Request $request, $id){
+        $equipe = Equipe::find($id);
+        $this->persist($equipe, $request);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return Equipe::with("atletas")->find($id);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
+    // Remover equipe
+    public function destroy($id){
         //
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    
+    private function persist(Equipe $equipe, Request $request){
+        $equipe->nome = $request->nome;
+        $equipe->sigla = $request->sigla;
+        $equipe->emblema = $request->emblema;
+        $equipe->email = $request->email;
+        $equipe->data_fundacao = $request->data_fundacao;
+        $equipe->save();
     }
 }
