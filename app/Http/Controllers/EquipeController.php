@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Equipe;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\DB;
 
 class EquipeController extends Controller {
     
@@ -21,8 +25,28 @@ class EquipeController extends Controller {
     
     // Persistir nova equipe
     public function store(Request $request) {
-        $equipe = new Equipe;
-        $this->persist($equipe, $request);
+        DB::transaction(function() use ($request) {
+            $equipe = new Equipe;
+            $equipe->nome = $request->nome;
+            $equipe->sigla = $request->sigla;
+            $equipe->email = $request->email;
+            $equipe->data_fundacao = $request->data_fundacao;
+            $equipe->save();
+
+            if(!empty($request->emblema)) {
+                $data = str_replace('data:image/png;base64,', '', $request->emblema);
+                $data = str_replace(' ', '+', $data);
+                $data = base64_decode($data);
+                
+                
+                $publicPath = 'imagens/equipes/'.$equipe->id.".png";
+                $file = public_path()."/".$publicPath;
+                file_put_contents($file, $data);
+
+                $equipe->emblema = $publicPath;
+                $equipe->save();
+            }      
+        });
     }
 
     // Exibir equipe
@@ -46,12 +70,10 @@ class EquipeController extends Controller {
         //
     }
     
-    private function persist(Equipe $equipe, Request $request){
+    private function montarEquipe(Equipe $equipe, Request $request){
         $equipe->nome = $request->nome;
         $equipe->sigla = $request->sigla;
-        $equipe->emblema = $request->emblema;
         $equipe->email = $request->email;
         $equipe->data_fundacao = $request->data_fundacao;
-        $equipe->save();
     }
 }
