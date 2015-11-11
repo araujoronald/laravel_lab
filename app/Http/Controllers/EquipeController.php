@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\DB;
 
 class EquipeController extends Controller {
     
+    public function __construct() {
+        $this->middleware('jwt.auth');
+    }
+    
     // Listagem das equipes
     public function index() {
         return Equipe::all();
