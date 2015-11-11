@@ -19,8 +19,10 @@ Route::group(['prefix' => 'api'], function() {
     Route::resource('autenticacao', 'AutenticacaoController', ['only' => ['index']]);
     Route::post('autenticacao', 'AutenticacaoController@autenticar');
     Route::post('autenticacao/registrar', 'AutenticacaoController@registrar');
+    Route::get('autenticacao/usuario', 'AutenticacaoController@getUsuarioAutenticado');
 });
 
+Route::post('usuario/registrar', 'AutenticacaoController@registrar');
 
 Route::resource('/atleta', 'AtletaController', ['except' => ['create', 'edit']]);
 
