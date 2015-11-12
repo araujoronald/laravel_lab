@@ -24,8 +24,8 @@ Route::group(['prefix' => 'api'], function() {
 
 Route::post('usuario/registrar', 'AutenticacaoController@registrar');
 
-Route::resource('/atleta', 'AtletaController', ['except' => ['create', 'edit']]);
+Route::resource('/atleta', 'AtletaController', ['except' => ['create']]);
 
-Route::resource('/equipe', 'EquipeController', ['except' => ['create', 'edit']]);
+Route::resource('/equipe', 'EquipeController', ['except' => ['create']]);
 
-Route::resource('/competicao', 'CompeticaoController', ['except' => ['create', 'edit']]);
+Route::resource('/competicao', 'CompeticaoController', ['except' => ['create']]);
