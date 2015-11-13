@@ -66,7 +66,23 @@ class EquipeController extends Controller {
     // Atualizar uma equipe
     public function update(Request $request, $id){
         $equipe = Equipe::find($id);
-        $this->persist($equipe, $request);
+        $equipe->nome = $request->nome;
+        $equipe->sigla = $request->sigla;
+        $equipe->email = $request->email;
+        $equipe->data_fundacao = $request->data_fundacao;
+        if(!empty($request->emblema) && $request->emblema !== $equipe->emblema) {
+            $data = str_replace('data:image/png;base64,', '', $request->emblema);
+            $data = str_replace(' ', '+', $data);
+            $data = base64_decode($data);
+
+
+            $publicPath = 'imagens/equipes/'.$equipe->id.".png";
+            $file = public_path()."/".$publicPath;
+            file_put_contents($file, $data);
+
+            $equipe->emblema = $publicPath;
+        }
+        $equipe->save();
     }
 
     // Remover equipe
