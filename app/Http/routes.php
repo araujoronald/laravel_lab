@@ -19,6 +19,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::resource('autenticacao', 'AutenticacaoController', ['only' => ['index']]);
     Route::post('autenticacao', 'AutenticacaoController@autenticar');
     Route::post('autenticacao/registrar', 'AutenticacaoController@registrar');
+    Route::post('autenticacao/google', 'AutenticacaoController@autenticarGoogle');
     Route::get('autenticacao/usuario', 'AutenticacaoController@getUsuarioAutenticado');
 });
 
