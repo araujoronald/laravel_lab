@@ -12,12 +12,13 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Laravel\Socialite\Facades\Socialite;
 use GuzzleHttp\Client;
+use App\Http\OAuthProvider;
 
 
 class AutenticacaoController extends Controller {
 
     public function __construct() {
-        $this->middleware('jwt.auth', ['except' => ['autenticar', 'autenticarGoogle', 'registrar']]);
+        $this->middleware('jwt.auth', ['except' => ['autenticar', 'autenticarGoogle', 'autenticarGithub', 'registrar']]);
     }
     
     public function index() {
@@ -25,31 +26,58 @@ class AutenticacaoController extends Controller {
     }
     
     public function autenticarGoogle(Request $request) {
-        $provider = Socialite::driver('google');
-        $accessToken = $provider->getAccessToken($request->code);
+        $user = OAuthProvider::getProfileGoogle($request);
+        $usuario = User::where('email', $user->email)->first();
         
-        $peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me'; 
-        $headers = array('Authorization' => 'Bearer ' . $accessToken);
-        $client = new Client();
-        $userOAuthResponse = json_decode($client->get($peopleApiUrl, ['headers' => $headers])->getBody()->getContents());
-        
-        $userOAuthId = $userOAuthResponse->id;
-        $userOAuthNome = $userOAuthResponse->displayName;
-        $userOAuthEmail = $userOAuthResponse->emails[0]->value;
-        
-        $usuario = User::where('email', $userOAuthEmail)->first();
-        
-        if(empty($usuario)){
-            $user = new User;
-            $user->nome = $userOAuthNome;
-            $user->email = $userOAuthEmail;
-            $user->password = hash('sha256', $userOAuthId);
-            $user->save();
+         if(empty($usuario)){
             $usuario = $user;
+        } else {
+            $usuario->avatar = $user->avatar;
         }
+        $usuario->save();
         
         //gerar o token
-        return $this->gerarTokenJWT($usuario);        
+        return $this->gerarTokenJWT($usuario);
+//        $provider = Socialite::driver('google');
+//        $accessToken = $provider->getAccessToken($request->code);
+//        
+//        $peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me'; 
+//        $headers = array('Authorization' => 'Bearer ' . $accessToken);
+//        $client = new Client();
+//        $userOAuthResponse = json_decode($client->get($peopleApiUrl, ['headers' => $headers])->getBody()->getContents());
+//        
+//        $userOAuthId = $userOAuthResponse->id;
+//        $userOAuthNome = $userOAuthResponse->displayName;
+//        $userOAuthEmail = $userOAuthResponse->emails[0]->value;
+//        
+//        $usuario = User::where('email', $userOAuthEmail)->first();
+//        
+//        if(empty($usuario)){
+//            $user = new User;
+//            $user->nome = $userOAuthNome;
+//            $user->email = $userOAuthEmail;
+//            $user->password = hash('sha256', $userOAuthId);
+//            $user->save();
+//            $usuario = $user;
+//        }
+//        
+//        //gerar o token
+//        return $this->gerarTokenJWT($usuario);        
+    }
+    
+    public function autenticarGithub(Request $request) {
+        $user = OAuthProvider::getProfileGithub($request);
+        $usuario = User::where('email', $user->email)->first();
+        
+        if(empty($usuario)){
+            $usuario = $user;
+        } else {
+            $usuario->avatar = $user->avatar;
+        }
+        $usuario->save();
+        
+        //gerar o token
+        return $this->gerarTokenJWT($usuario);
     }
     
     public function autenticar(Request $request) {

@@ -20,6 +20,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::post('autenticacao', 'AutenticacaoController@autenticar');
     Route::post('autenticacao/registrar', 'AutenticacaoController@registrar');
     Route::post('autenticacao/google', 'AutenticacaoController@autenticarGoogle');
+    Route::post('autenticacao/github', 'AutenticacaoController@autenticarGithub');
     Route::get('autenticacao/usuario', 'AutenticacaoController@getUsuarioAutenticado');
 });
 
