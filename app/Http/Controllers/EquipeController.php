@@ -87,7 +87,7 @@ class EquipeController extends Controller {
 
     // Remover equipe
     public function destroy($id){
-        //
+        Equipe::destroy($id);
     }
     
     private function montarEquipe(Equipe $equipe, Request $request){
