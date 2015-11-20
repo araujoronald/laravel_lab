@@ -34,5 +34,17 @@ return [
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+    
+    'google' => [
+        'client_id' => '571732240769-3trpjtbatlm1n98v0c50m2u5rqhgfoep.apps.googleusercontent.com',
+        'client_secret' => 'R5CVFquCIr5b28qsv1aeTGMB',
+        'redirect' => 'http://localhost',
+    ],
+    
+    'github' => [
+    'client_id' => 'bbb8298bf84e51ae6e16',
+    'client_secret' => '9b764f5c3f0264c26f33e0187f741dcefe22e3a9',
+    'redirect' => 'http://localhost',
+],
 
 ];
