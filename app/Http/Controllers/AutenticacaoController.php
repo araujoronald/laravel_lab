@@ -9,12 +9,14 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use App\User;
 use Illuminate\Support\Facades\Hash;
 use App\Http\OAuthProvider;
+use GuzzleHttp\Client;
+use Guzzle\Plugin\Oauth;
 
 
 class AutenticacaoController extends Controller {
 
     public function __construct() {
-        $this->middleware('jwt.auth', ['except' => ['autenticar', 'autenticarGoogle', 'autenticarGithub', 'registrar']]);
+        $this->middleware('jwt.auth', ['except' => ['autenticar', 'autenticarGoogle', 'autenticarGithub', 'autenticarFacebook', 'autenticarTwitter', 'registrar']]);
     }
     
     public function index() {
@@ -24,19 +26,28 @@ class AutenticacaoController extends Controller {
     public function autenticarGoogle(Request $request) {
         $user = OAuthProvider::getProfileGoogle($request);
         $usuario = User::where('email', $user->email)->first();
-        $this->inserirOuAtualizarUsuario($usuario, $user);
+        $usuarioPersistido = $this->inserirOuAtualizarUsuario($usuario, $user);
         
         //gerar o token
-        return $this->gerarTokenJWT($usuario);        
+        return $this->gerarTokenJWT($usuarioPersistido);        
+    }
+    
+    public function autenticarFacebook(Request $request) {
+        $user = OAuthProvider::getProfileFacebook($request);
+        $usuario = User::where('email', $user->email)->first();
+        $usuarioPersistido = $this->inserirOuAtualizarUsuario($usuario, $user);
+        
+        //gerar o token
+        return $this->gerarTokenJWT($usuarioPersistido);        
     }
     
     public function autenticarGithub(Request $request) {
         $user = OAuthProvider::getProfileGithub($request);
         $usuario = User::where('email', $user->email)->first();
-        $this->inserirOuAtualizarUsuario($usuario, $user);
+        $usuarioPersistido = $this->inserirOuAtualizarUsuario($usuario, $user);
         
         //gerar o token
-        return $this->gerarTokenJWT($usuario);
+        return $this->gerarTokenJWT($usuarioPersistido);
     }
     
     public function autenticar(Request $request) {
@@ -95,6 +106,7 @@ class AutenticacaoController extends Controller {
             $usuario->avatar = $user->avatar;
         }
         $usuario->save();
+        return $usuario;
     }
 
 }

@@ -42,9 +42,24 @@ return [
     ],
     
     'github' => [
-    'client_id' => 'bbb8298bf84e51ae6e16',
-    'client_secret' => '9b764f5c3f0264c26f33e0187f741dcefe22e3a9',
-    'redirect' => 'http://localhost',
-],
+        'client_id' => 'bbb8298bf84e51ae6e16',
+        'client_secret' => '9b764f5c3f0264c26f33e0187f741dcefe22e3a9',
+        'redirect' => 'http://localhost',
+    ],
+    
+    'facebook' => [
+        'client_id' => '1523141704677755',
+        'client_secret' => 'cf5ef3f770afbd6f233f855983da142e',
+        'redirect' => 'http://localhost/',
+    ],
+    
+    'twitter' => [
+        'client_id' => 'rVLYyzOa22CDrdWK9QhMnH19N',
+        'client_secret' => 'iEMsUmTI78Fj5Ej81ybjN9bI3Z37u4F8FhZfBXES9HR7rfZI3J',
+        'redirect' => 'http://localhost',
+    ],
+    
+    
 
+    
 ];
